@@ -1,0 +1,70 @@
+<!-- crypto_chart.html -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto my-8 p-4 bg-white rounded shadow">
+    <h2 class="text-2xl font-semibold mb-4">Перевірити ціну криптовалюти</h2>
+    <form action="{% url 'crypto_price_checker' %}" method="get" class="space-y-4">
+        <div>
+            <label for="symbol" class="block text-gray-700">Криптовалютна пара (напр., BTCUSDT):</label>
+            <input type="text" id="symbol" name="symbol" value="{{ request.GET.symbol }}" class="w-full p-2 border border-gray-300 rounded mt-1">
+        </div>
+
+        <div>
+            <label for="interval" class="block text-gray-700">Інтервал:</label>
+            <select id="interval" name="interval" class="w-full p-2 border border-gray-300 rounded mt-1">
+                <option value="1m" {% if request.GET.interval == '1m' %}selected{% endif %}>1 Хвилина</option>
+                <option value="5m" {% if request.GET.interval == '5m' %}selected{% endif %}>5 Хвилин</option>
+                <option value="15m" {% if request.GET.interval == '15m' %}selected{% endif %}>15 Хвилин</option>
+                <option value="1h" {% if request.GET.interval == '1h' %}selected{% endif %}>1 Година</option>
+                <option value="1d" {% if request.GET.interval == '1d' %}selected{% endif %}>1 День</option>
+                <!-- Add other intervals here -->
+            </select>
+        </div>
+
+        <div>
+            <label for="limit" class="block text-gray-700">Розмір датасету (напр., 100):</label>
+            <input type="number" id="limit" name="limit" value="{{ request.GET.limit | default_if_none:100 }}" class="w-full p-2 border border-gray-300 rounded mt-1">
+        </div>
+
+        <div>
+            <input type="submit" value="Показати результат" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer">
+        </div>
+    </form>
+
+    <div id="priceData" class="mt-8">
+        {% if historical_data %}
+            <canvas id="cryptoChart" class="mt-8">
+                <script>
+                    const historicalData = JSON.parse('{{ historical_data|escapejs }}');
+                    const arimaData = JSON.parse('{{ arima_data|escapejs }}');
+                    const timestamps = JSON.parse('{{ timestamps|escapejs }}');
+                </script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+                <script src="{% static 'market_analysis/crypto_chart.js' %}"></script>
+            </canvas>
+        {% endif %}
+    </div>
+</div>
+
+{% if error %}
+<!-- Error Modal -->
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded shadow-lg">
+        <h2 class="text-xl font-semibold mb-4">Error</h2>
+        <p>{{ error }}</p>
+        <button onclick="closeModal()" class="mt-4 bg-red-500 text-white p-2 rounded">Close</button>
+    </div>
+</div>
+<script>
+    function closeModal() {
+        document.querySelector('.fixed').style.display = 'none';
+    }
+</script>
+{% endif %}
+
+{% endblock %}

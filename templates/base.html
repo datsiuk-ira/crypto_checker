@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналіз криптовалют</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="flex flex-col min-h-screen font-sans bg-gray-100">
+    <header class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto">
+            <h1 class="text-2xl">Аналіз криптовалют</h1>
+        </div>
+    </header>
+    <div class="container mx-auto flex-grow">
+        {% block content %}{% endblock %}
+    </div>
+    <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
+        <div class="container mx-auto">
+            <p>&copy; 2024 Веб-аплікація для аналізу криптовалют</p>
+        </div>
+    </footer>
+</body>
+</html>
